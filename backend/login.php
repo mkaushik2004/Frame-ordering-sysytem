@@ -1,56 +1,41 @@
 <?php
-require('db.php');
-header('Content-Type: application/json');
+// backend/login.php
 session_start();
+header("Content-Type: application/json");
+header("Access-Control-Allow-Origin: *");
+header("Access-Control-Allow-Headers: Content-Type");
+
+include "db.php";
 
 $data = json_decode(file_get_contents("php://input"), true);
-$username = trim($data['username'] ?? '');
-$password = trim($data['password'] ?? '');
+$username = $data["username"] ?? "";
+$password = $data["password"] ?? "";
 
-// ✅ Admin bypass
-if ($username === "admin@gmail.com" && $password === "123456") {
-    $_SESSION["admin"] = true;
-    echo json_encode([
-        "success" => true,
-        "isAdmin" => true,
-        "message" => "Admin login successful!"
-    ]);
+if (empty($username) || empty($password)) {
+    echo json_encode(["success" => false, "message" => "Username and password required"]);
     exit;
 }
 
-// ✅ Normal users (database check)
-if ($conn->connect_error) {
-    echo json_encode(["success" => false, "message" => "Database connection failed"]);
-    exit;
-}
-
-$stmt = $conn->prepare("SELECT * FROM users WHERE username=? OR email=? LIMIT 1");
+// Fetch user from DB
+$stmt = $conn->prepare("SELECT * FROM users WHERE username=? OR email=?");
 $stmt->bind_param("ss", $username, $username);
 $stmt->execute();
 $result = $stmt->get_result();
 
-if ($result->num_rows === 0) {
-    echo json_encode(["success" => false, "message" => "User not found"]);
-    exit;
-}
+if ($result->num_rows === 1) {
+    $user = $result->fetch_assoc();
 
-$user = $result->fetch_assoc();
+    if (password_verify($password, $user["password"])) {
+        $_SESSION["admin_id"] = $user["id"];
+        $_SESSION["admin_name"] = $user["fullname"];
+        $_SESSION["admin_logged_in"] = true;
 
-if (password_verify($password, $user['password'])) {
-    $_SESSION['user_id'] = $user['id'];
-    $_SESSION['fullname'] = $user['fullname'];
-
-    echo json_encode([
-        "success" => true,
-        "isAdmin" => false,
-        "message" => "Login successful",
-        "user" => [
-            "id" => $user['id'],
-            "name" => $user['fullname']
-        ]
-    ]);
+        echo json_encode(["success" => true, "message" => "Login successful"]);
+    } else {
+        echo json_encode(["success" => false, "message" => "Invalid password"]);
+    }
 } else {
-    echo json_encode(["success" => false, "message" => "Invalid password"]);
+    echo json_encode(["success" => false, "message" => "User not found"]);
 }
 
 $conn->close();

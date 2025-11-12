@@ -3,15 +3,24 @@ let classesData = [];
 let ordersData = [];
 
 // Check authentication before initializing
-function checkAuthentication() {
-    const isAuthenticated = sessionStorage.getItem('adminAuthenticated');
-    if (isAuthenticated !== 'true') {
-        // Redirect to login page
-        window.location.href = 'login.html';
+async function checkAuthentication() {
+    const res = await fetch("../backend/check_session.php");
+    const data = await res.json();
+    if (!data.logged_in) {
+        window.location.href = "login.html";
         return false;
     }
+    console.log("Logged in as", data.admin_name);
     return true;
 }
+
+// Modify logout button
+async function handleLogout() {
+    if (!confirm("Logout?")) return;
+    await fetch("../backend/logout.php");
+    window.location.href = "login.html";
+}
+
 
 // Initialize admin dashboard
 document.addEventListener('DOMContentLoaded', function() {
