@@ -1,22 +1,25 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Admin Dashboard - Busy Canvas</title>
     <link rel="icon" href="../assets/img/logo/1.jpg" />
-    <link rel="stylesheet" href="../assets/css/bootstrap/css/bootstrap.min.css"/>
-    <link rel="stylesheet" href="../assets/css/admin.css"/>
+    <link rel="stylesheet" href="../assets/css/bootstrap/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="../assets/css/admin.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <script src="../assets/css/bootstrap/js/bootstrap.bundle.min.js"></script>
 </head>
+
 <body>
     <!-- Header -->
     <header class="admin-header">
         <nav class="navbar navbar-expand-lg">
             <div class="container-fluid">
                 <a class="navbar-brand" href="../layout/index.html">
-                    <img src="../assets/img/logo/1.jpg" alt="Logo" width="30" height="30" class="d-inline-block align-text-top"/>
+                    <img src="../assets/img/logo/1.jpg" alt="Logo" width="30" height="30"
+                        class="d-inline-block align-text-top" />
                     <span class="brand-text">Busy Canvas Admin</span>
                 </a>
                 <div class="admin-nav">
@@ -83,12 +86,14 @@
             <!-- Tabs Navigation -->
             <ul class="nav nav-tabs admin-tabs" id="adminTabs" role="tablist">
                 <li class="nav-item" role="presentation">
-                    <button class="nav-link active" id="classes-tab" data-bs-toggle="tab" data-bs-target="#classes" type="button" role="tab">
+                    <button class="nav-link active" id="classes-tab" data-bs-toggle="tab" data-bs-target="#classes"
+                        type="button" role="tab">
                         <i class="fas fa-chalkboard-teacher"></i> Scheduled Classes
                     </button>
                 </li>
                 <li class="nav-item" role="presentation">
-                    <button class="nav-link" id="orders-tab" data-bs-toggle="tab" data-bs-target="#orders" type="button" role="tab">
+                    <button class="nav-link" id="orders-tab" data-bs-toggle="tab" data-bs-target="#orders" type="button"
+                        role="tab">
                         <i class="fas fa-shopping-cart"></i> Orders
                     </button>
                 </li>
@@ -367,6 +372,15 @@
     </div>
 
     <script src="../assets/js/admin.js"></script>
-</body>
-</html>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const isAdmin = sessionStorage.getItem("adminAuthenticated");
+            if (isAdmin !== "true") {
+                window.location.href = "login.html";
+            }
+        });
+    </script>
 
+</body>
+
+</html>
