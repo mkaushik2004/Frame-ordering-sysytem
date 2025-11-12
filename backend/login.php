@@ -1,34 +1,42 @@
 <?php
+// backend/login.php
+session_start();
 header("Content-Type: application/json");
 header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Headers: Content-Type");
 
 include "db.php";
-session_start();
 
 $data = json_decode(file_get_contents("php://input"), true);
-$email = $conn->real_escape_string($data['email']);
-$password = $data['password'];
+$username = $data["username"] ?? "";
+$password = $data["password"] ?? "";
 
-$sql = "SELECT * FROM users WHERE email='$email'";
-$result = $conn->query($sql);
-
-if ($result->num_rows === 0) {
-    echo json_encode(["success" => false, "message" => "No account found with this email"]);
+if (empty($username) || empty($password)) {
+    echo json_encode(["success" => false, "message" => "Username and password required"]);
     exit;
 }
 
-$user = $result->fetch_assoc();
+// Fetch user from DB
+$stmt = $conn->prepare("SELECT * FROM users WHERE username=? OR email=?");
+$stmt->bind_param("ss", $username, $username);
+$stmt->execute();
+$result = $stmt->get_result();
 
-if (password_verify($password, $user['password'])) {
-    $_SESSION['user_id'] = $user['id'];
-    $_SESSION['user_name'] = $user['fullname'];
-    echo json_encode([
-        "success" => true,
-        "message" => "Login successful!",
-        "user" => ["id" => $user['id'], "name" => $user['fullname']]
-    ]);
+if ($result->num_rows === 1) {
+    $user = $result->fetch_assoc();
+
+    if (password_verify($password, $user["password"])) {
+        $_SESSION["admin_id"] = $user["id"];
+        $_SESSION["admin_name"] = $user["fullname"];
+        $_SESSION["admin_logged_in"] = true;
+
+        echo json_encode(["success" => true, "message" => "Login successful"]);
+    } else {
+        echo json_encode(["success" => false, "message" => "Invalid password"]);
+    }
 } else {
-    echo json_encode(["success" => false, "message" => "Incorrect password"]);
+    echo json_encode(["success" => false, "message" => "User not found"]);
 }
+
+$conn->close();
 ?>
