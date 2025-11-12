@@ -1,0 +1,17 @@
+{
+    "name": "dark-vigilant/backend",
+    "autoload": {
+        "psr-4": {
+            "DarkVigilant\\Backend\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "allanjaisondsa",
+            "email": "allan.jaison@btech.christuniversity.in"
+        }
+    ],
+    "require": {
+        "phpmailer/phpmailer": "^7.0"
+    }
+}
