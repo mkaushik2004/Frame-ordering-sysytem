@@ -1,27 +1,31 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Busy Canvas - Art & Creativity</title>
     <link rel="icon" href="../assets/img/logo/1.jpg" />
-    <link rel="stylesheet" href="../assets/css/bootstrap/css/bootstrap.min.css"/>
-    <link rel="stylesheet" href="../assets/css/main.css"/>
+    <link rel="stylesheet" href="../assets/css/bootstrap/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="../assets/css/main.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <script src="../assets/css/bootstrap/js/bootstrap.bundle.min.js"></script>
 </head>
+
 <body>
     <header>
         <nav class="navbar navbar-expand-lg bg-body-tertiary">
             <div class="container-fluid">
                 <div class="col-lg-4">
                     <a class="navbar-brand" href="#">
-                        <img src="../assets/img/logo/1.jpg" alt="Logo" width="30" height="30" class="d-inline-block align-text-top"/>
+                        <img src="../assets/img/logo/1.jpg" alt="Logo" width="30" height="30"
+                            class="d-inline-block align-text-top" />
                         <span class="brand-text">Busy Canvas</span>
                     </a>
                 </div>
                 <div>
-                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                        aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                         <span class="navbar-toggler-icon"></span>
                     </button>
                     <div class="collapse navbar-collapse" id="navbarNav">
@@ -45,12 +49,15 @@
                                 <a class="nav-link" href="#contact">Contact</a>
                             </li>
                             <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
+                                    aria-expanded="false">
                                     <img src="../assets/img/header/profile.png" alt="profile" height="30" width="30">
                                 </a>
                                 <ul class="dropdown-menu" id="profileDropdown" style="left:-86px">
-                                    <li><a class="dropdown-item" href="../layout/login.html"><i class="fas fa-sign-in-alt"></i> Login</a></li>
-                                    <li><a class="dropdown-item" href="../layout/signup.html"><i class="fas fa-user-plus"></i> Register</a></li>
+                                    <li><a class="dropdown-item" href="../layout/login.html"><i
+                                                class="fas fa-sign-in-alt"></i> Login</a></li>
+                                    <li><a class="dropdown-item" href="../layout/signup.html"><i
+                                                class="fas fa-user-plus"></i> Register</a></li>
                                 </ul>
                             </li>
                         </ul>
@@ -65,14 +72,15 @@
         <div class="hero-content">
             <h1 class="h-title">Welcome to <span>BUSY CANVAS</span></h1>
             <h4 class="h-sub-title">Gift my art to your heart</h4>
-            <p class="hero-description">Transform your memories into timeless artwork. From portraits to landscapes, we bring your vision to life with passion and precision.</p>
+            <p class="hero-description">Transform your memories into timeless artwork. From portraits to landscapes, we
+                bring your vision to life with passion and precision.</p>
             <div class="hero-buttons">
                 <button class="btn-primary" onclick="window.location.href='#gal'">View Gallery</button>
                 <button class="btn-secondary" onclick="window.location.href='#price'">Get Started</button>
             </div>
         </div>
         <div class="h-img">
-            <img src="../assets/img/logo/1.jpg" alt="Busy Canvas Artwork"> 
+            <img src="../assets/img/logo/1.jpg" alt="Busy Canvas Artwork">
         </div>
         <div class="scroll-indicator">
             <i class="fas fa-chevron-down"></i>
@@ -92,7 +100,9 @@
                     <p class="who-we-are">Who We Are</p>
                     <h3>Every Canvas Is A Journey Of All Its Own</h3>
                     <p class="fst-italic">
-                        At Busy Canvas, we believe that every piece of art tells a unique story. Our artists are passionate about creating meaningful artwork that captures the essence of your memories and emotions.
+                        At Busy Canvas, we believe that every piece of art tells a unique story. Our artists are
+                        passionate about creating meaningful artwork that captures the essence of your memories and
+                        emotions.
                     </p>
                     <div class="features">
                         <div class="feature-item">
@@ -250,7 +260,7 @@
                         <a class="btn" href="../layout/order-form.html">Purchase Now</a>
                     </div>
                 </div>
-            
+
                 <div class="card featured">
                     <div class="popular-badge">Most Popular</div>
                     <div class="card-header">
@@ -268,7 +278,7 @@
                         <a class="btn" href="../layout/order-form.html">Purchase Now</a>
                     </div>
                 </div>
-            
+
                 <div class="card">
                     <div class="card-header">
                         <h6 class="type">Premium Package</h6>
@@ -359,7 +369,8 @@
                 <div class="col-lg-4">
                     <div class="footer-section">
                         <h4>Busy Canvas</h4>
-                        <p>Creating beautiful artwork that tells your story. From portraits to landscapes, we bring your vision to life with passion and precision.</p>
+                        <p>Creating beautiful artwork that tells your story. From portraits to landscapes, we bring your
+                            vision to life with passion and precision.</p>
                         <div class="social-links">
                             <a href="#"><i class="fab fa-facebook"></i></a>
                             <a href="#"><i class="fab fa-instagram"></i></a>
@@ -406,6 +417,20 @@
             </div>
         </div>
     </footer>
-    
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const userAuth = sessionStorage.getItem("userAuthenticated");
+            const adminAuth = sessionStorage.getItem("adminAuthenticated");
+
+            if (!userAuth && !adminAuth) {
+                window.location.href = "login.html";
+            } else {
+               
+            }
+        });
+    </script>
+
+
 </body>
+
 </html>

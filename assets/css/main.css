@@ -216,7 +216,7 @@ html {
 .h-img img {
     height: 300px;
     width: auto;
-    border-radius: 20px;
+    border-radius: 50%;
     box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
     transition: all 0.3s ease;
 }
