@@ -3,45 +3,42 @@ let classesData = [];
 let ordersData = [];
 
 // Check authentication before initializing
-async function checkAuthentication() {
-    const res = await fetch("../backend/check_session.php");
-    const data = await res.json();
-    if (!data.logged_in) {
+
+// Simple admin-only authentication
+
+// Authentication check
+function checkAuthentication() {
+    const isAdmin = sessionStorage.getItem("adminAuthenticated");
+    if (isAdmin !== "true") {
         window.location.href = "login.html";
         return false;
     }
-    console.log("Logged in as", data.admin_name);
     return true;
 }
 
-// Modify logout button
-async function handleLogout() {
-    if (!confirm("Logout?")) return;
-    await fetch("../backend/logout.php");
-    window.location.href = "login.html";
+// Logout
+function handleLogout() {
+    if (confirm("Are you sure you want to logout?")) {
+        sessionStorage.removeItem("adminAuthenticated");
+        window.location.href = "login.html";
+    }
 }
 
-
 // Initialize admin dashboard
-document.addEventListener('DOMContentLoaded', function() {
-    // Check authentication first
+document.addEventListener("DOMContentLoaded", function () {
     if (!checkAuthentication()) {
         return;
     }
-    
-    // Load sample data
+
+    // Continue dashboard setup
     loadSampleData();
-    
-    // Render tables
     renderClassesTable();
     renderOrdersTable();
-    
-    // Update statistics
     updateStatistics();
-    
-    // Setup event listeners
     setupEventListeners();
 });
+
+
 
 // Load sample data
 function loadSampleData() {
@@ -84,7 +81,7 @@ function loadSampleData() {
             status: 'completed'
         }
     ];
-    
+
     // Sample orders data
     ordersData = [
         {
@@ -127,17 +124,17 @@ function loadSampleData() {
             instructions: 'Modern abstract design with vibrant colors'
         }
     ];
-    
+
     // Load from localStorage if available
     const savedClasses = localStorage.getItem('adminClasses');
     const savedOrders = localStorage.getItem('adminOrders');
-    
+
     if (savedClasses) {
         classesData = JSON.parse(savedClasses);
     } else {
         localStorage.setItem('adminClasses', JSON.stringify(classesData));
     }
-    
+
     if (savedOrders) {
         ordersData = JSON.parse(savedOrders);
     } else {
@@ -150,18 +147,18 @@ function renderClassesTable(filteredData = null) {
     const tbody = document.getElementById('classesTableBody');
     const emptyState = document.getElementById('classesEmptyState');
     const data = filteredData || classesData;
-    
+
     tbody.innerHTML = '';
-    
+
     if (data.length === 0) {
         tbody.style.display = 'none';
         emptyState.style.display = 'block';
         return;
     }
-    
+
     tbody.style.display = '';
     emptyState.style.display = 'none';
-    
+
     data.forEach(classItem => {
         const row = document.createElement('tr');
         row.innerHTML = `
@@ -197,18 +194,18 @@ function renderOrdersTable(filteredData = null) {
     const tbody = document.getElementById('ordersTableBody');
     const emptyState = document.getElementById('ordersEmptyState');
     const data = filteredData || ordersData;
-    
+
     tbody.innerHTML = '';
-    
+
     if (data.length === 0) {
         tbody.style.display = 'none';
         emptyState.style.display = 'block';
         return;
     }
-    
+
     tbody.style.display = '';
     emptyState.style.display = 'none';
-    
+
     data.forEach(order => {
         const row = document.createElement('tr');
         row.innerHTML = `
@@ -248,7 +245,7 @@ function updateStatistics() {
     const pendingOrders = ordersData.filter(o => o.status === 'pending').length;
     const completedClasses = classesData.filter(c => c.status === 'completed').length;
     const completedOrders = ordersData.filter(o => o.status === 'completed').length;
-    
+
     document.getElementById('totalClasses').textContent = totalClasses;
     document.getElementById('totalOrders').textContent = totalOrders;
     document.getElementById('pendingItems').textContent = pendingClasses + pendingOrders;
@@ -258,9 +255,9 @@ function updateStatistics() {
 // Setup event listeners
 function setupEventListeners() {
     // Class search
-    document.getElementById('classSearch').addEventListener('input', function(e) {
+    document.getElementById('classSearch').addEventListener('input', function (e) {
         const searchTerm = e.target.value.toLowerCase();
-        const filtered = classesData.filter(classItem => 
+        const filtered = classesData.filter(classItem =>
             classItem.name.toLowerCase().includes(searchTerm) ||
             classItem.email.toLowerCase().includes(searchTerm) ||
             classItem.phone.includes(searchTerm) ||
@@ -268,33 +265,33 @@ function setupEventListeners() {
         );
         renderClassesTable(filtered);
     });
-    
+
     // Class filter
-    document.getElementById('classFilter').addEventListener('change', function(e) {
+    document.getElementById('classFilter').addEventListener('change', function (e) {
         const filterValue = e.target.value;
         let filtered = classesData;
-        
+
         if (filterValue !== 'all') {
             filtered = classesData.filter(c => c.status === filterValue);
         }
-        
+
         const searchTerm = document.getElementById('classSearch').value.toLowerCase();
         if (searchTerm) {
-            filtered = filtered.filter(classItem => 
+            filtered = filtered.filter(classItem =>
                 classItem.name.toLowerCase().includes(searchTerm) ||
                 classItem.email.toLowerCase().includes(searchTerm) ||
                 classItem.phone.includes(searchTerm) ||
                 classItem.sessionType.toLowerCase().includes(searchTerm)
             );
         }
-        
+
         renderClassesTable(filtered);
     });
-    
+
     // Order search
-    document.getElementById('orderSearch').addEventListener('input', function(e) {
+    document.getElementById('orderSearch').addEventListener('input', function (e) {
         const searchTerm = e.target.value.toLowerCase();
-        const filtered = ordersData.filter(order => 
+        const filtered = ordersData.filter(order =>
             order.name.toLowerCase().includes(searchTerm) ||
             order.email.toLowerCase().includes(searchTerm) ||
             order.phone.includes(searchTerm) ||
@@ -302,26 +299,26 @@ function setupEventListeners() {
         );
         renderOrdersTable(filtered);
     });
-    
+
     // Order filter
-    document.getElementById('orderFilter').addEventListener('change', function(e) {
+    document.getElementById('orderFilter').addEventListener('change', function (e) {
         const filterValue = e.target.value;
         let filtered = ordersData;
-        
+
         if (filterValue !== 'all') {
             filtered = ordersData.filter(o => o.status === filterValue);
         }
-        
+
         const searchTerm = document.getElementById('orderSearch').value.toLowerCase();
         if (searchTerm) {
-            filtered = filtered.filter(order => 
+            filtered = filtered.filter(order =>
                 order.name.toLowerCase().includes(searchTerm) ||
                 order.email.toLowerCase().includes(searchTerm) ||
                 order.phone.includes(searchTerm) ||
                 order.artworkType.toLowerCase().includes(searchTerm)
             );
         }
-        
+
         renderOrdersTable(filtered);
     });
 }
@@ -330,7 +327,7 @@ function setupEventListeners() {
 function viewClassDetails(id) {
     const classItem = classesData.find(c => c.id === id);
     if (!classItem) return;
-    
+
     const content = `
         <div class="details-view">
             <div class="detail-item">
@@ -367,7 +364,7 @@ function viewClassDetails(id) {
             </div>
         </div>
     `;
-    
+
     document.getElementById('viewDetailsContent').innerHTML = content;
     const modal = new bootstrap.Modal(document.getElementById('viewDetailsModal'));
     modal.show();
@@ -377,7 +374,7 @@ function viewClassDetails(id) {
 function editClass(id) {
     const classItem = classesData.find(c => c.id === id);
     if (!classItem) return;
-    
+
     document.getElementById('editClassId').value = classItem.id;
     document.getElementById('editClassName').value = classItem.name;
     document.getElementById('editClassEmail').value = classItem.email;
@@ -387,7 +384,7 @@ function editClass(id) {
     document.getElementById('editClassStatus').value = classItem.status;
     document.getElementById('editClassSessionType').value = classItem.sessionType;
     document.getElementById('editClassArtMedium').value = classItem.artMedium;
-    
+
     const modal = new bootstrap.Modal(document.getElementById('editClassModal'));
     modal.show();
 }
@@ -396,7 +393,7 @@ function editClass(id) {
 function saveClassEdit() {
     const id = parseInt(document.getElementById('editClassId').value);
     const classItem = classesData.find(c => c.id === id);
-    
+
     if (classItem) {
         classItem.name = document.getElementById('editClassName').value;
         classItem.email = document.getElementById('editClassEmail').value;
@@ -404,14 +401,14 @@ function saveClassEdit() {
         classItem.date = document.getElementById('editClassDate').value;
         classItem.time = document.getElementById('editClassTime').value;
         classItem.status = document.getElementById('editClassStatus').value;
-        
+
         localStorage.setItem('adminClasses', JSON.stringify(classesData));
         renderClassesTable();
         updateStatistics();
-        
+
         const modal = bootstrap.Modal.getInstance(document.getElementById('editClassModal'));
         modal.hide();
-        
+
         showNotification('Class updated successfully!', 'success');
     }
 }
@@ -431,7 +428,7 @@ function deleteClass(id) {
 function viewOrderDetails(id) {
     const order = ordersData.find(o => o.id === id);
     if (!order) return;
-    
+
     const content = `
         <div class="details-view">
             <div class="detail-item">
@@ -476,7 +473,7 @@ function viewOrderDetails(id) {
             </div>
         </div>
     `;
-    
+
     document.getElementById('viewDetailsContent').innerHTML = content;
     const modal = new bootstrap.Modal(document.getElementById('viewDetailsModal'));
     modal.show();
@@ -486,7 +483,7 @@ function viewOrderDetails(id) {
 function editOrder(id) {
     const order = ordersData.find(o => o.id === id);
     if (!order) return;
-    
+
     document.getElementById('editOrderId').value = order.id;
     document.getElementById('editOrderName').value = order.name;
     document.getElementById('editOrderEmail').value = order.email;
@@ -495,7 +492,7 @@ function editOrder(id) {
     document.getElementById('editOrderArtworkType').value = order.artworkType;
     document.getElementById('editOrderCanvasSize').value = order.canvasSize;
     document.getElementById('editOrderInstructions').value = order.instructions;
-    
+
     const modal = new bootstrap.Modal(document.getElementById('editOrderModal'));
     modal.show();
 }
@@ -504,20 +501,20 @@ function editOrder(id) {
 function saveOrderEdit() {
     const id = parseInt(document.getElementById('editOrderId').value);
     const order = ordersData.find(o => o.id === id);
-    
+
     if (order) {
         order.name = document.getElementById('editOrderName').value;
         order.email = document.getElementById('editOrderEmail').value;
         order.phone = document.getElementById('editOrderPhone').value;
         order.status = document.getElementById('editOrderStatus').value;
-        
+
         localStorage.setItem('adminOrders', JSON.stringify(ordersData));
         renderOrdersTable();
         updateStatistics();
-        
+
         const modal = bootstrap.Modal.getInstance(document.getElementById('editOrderModal'));
         modal.hide();
-        
+
         showNotification('Order updated successfully!', 'success');
     }
 }
@@ -536,10 +533,10 @@ function deleteOrder(id) {
 // Format date
 function formatDate(dateString) {
     const date = new Date(dateString);
-    return date.toLocaleDateString('en-US', { 
-        year: 'numeric', 
-        month: 'long', 
-        day: 'numeric' 
+    return date.toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
     });
 }
 
@@ -561,9 +558,9 @@ function showNotification(message, type = 'info') {
         animation: slideIn 0.3s ease;
     `;
     notification.textContent = message;
-    
+
     document.body.appendChild(notification);
-    
+
     setTimeout(() => {
         notification.style.animation = 'slideOut 0.3s ease';
         setTimeout(() => notification.remove(), 300);
@@ -576,7 +573,7 @@ function handleLogout() {
         // Clear authentication
         sessionStorage.removeItem('adminAuthenticated');
         sessionStorage.removeItem('adminLoginTime');
-        
+
         // Redirect to login page
         window.location.href = 'login.html';
     }

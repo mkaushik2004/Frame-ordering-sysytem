@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -41,7 +42,8 @@
                     <div class="form-group">
                         <div class="input-group">
                             <i class="fas fa-user input-icon"></i>
-                            <input type="text" id="username" class="form-control" placeholder="Username or Email" required>
+                            <input type="text" id="username" class="form-control" placeholder="Username or Email"
+                                required>
                         </div>
                     </div>
 
@@ -115,8 +117,7 @@
             }
         }
 
-        // Handle login form
-        document.getElementById("loginForm").addEventListener("submit", async (e) => {
+        document.getElementById("loginForm").addEventListener("submit", async function (e) {
             e.preventDefault();
 
             const username = document.getElementById("username").value.trim();
@@ -140,21 +141,34 @@
                     data = JSON.parse(text);
                 } catch (err) {
                     console.error("Invalid JSON from PHP:", text);
-                    alert("Server error: invalid response.");
+                    alert("Server error. Please try again later.");
                     return;
                 }
 
                 if (data.success) {
-                    alert("Login successful!");
-                    window.location.href = "admin.html";
+                    if (data.isAdmin) {
+                        // ✅ Admin
+                        sessionStorage.setItem("adminAuthenticated", "true");
+                        alert("Welcome, Admin!");
+                        window.location.href = "admin.html";
+                    } else {
+                        // ✅ Normal user
+                        sessionStorage.setItem("userAuthenticated", "true");
+                        localStorage.setItem("username", data.user.name);
+                        alert("Login successful!");
+                        window.location.href = "index.html";
+                    }
                 } else {
-                    alert(data.message || "Invalid username or password");
+                    alert(data.message || "Invalid credentials.");
                 }
             } catch (err) {
-                alert("Failed to connect to server. Make sure Apache & MySQL are running.");
                 console.error(err);
+                alert("Could not connect to server. Please ensure Apache is running.");
             }
         });
     </script>
+
+
 </body>
+
 </html>

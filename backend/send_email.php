@@ -10,7 +10,7 @@ function sendOrderEmail($to, $subject, $messageHTML) {
         $mail->isSMTP();
         $mail->Host = 'smtp.gmail.com';
         $mail->SMTPAuth = true;
-        $mail->Username = 'your_email@gmail.com'; // your gmail
+        $mail->Username = 'allan.jaison@btech.christuniversity.in'; // your gmail
         $mail->Password = 'ibrs apkg shnr txwj';    // use an App Password (Google Account → Security)
         $mail->SMTPSecure = 'tls';
         $mail->Port = 587;
